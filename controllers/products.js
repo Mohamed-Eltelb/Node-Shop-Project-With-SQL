@@ -100,8 +100,6 @@ exports.getAdminProducts = (req, res, next) => {
 /* ============= Cart ============= */
 exports.getCart = (req, res, next) => {
   Product.fetchAllCart().then((cartItems) => {
-    console.log(cartItems);
-    
     res.render("shop/cart", {
       docTitle: "Your Cart",
       path: "/cart",
