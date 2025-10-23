@@ -1,3 +1,4 @@
+const db = require("../utils/db");
 const fs = require("fs");
 const path = require("path");
 const currentDir = require("../utils/path");
@@ -39,27 +40,56 @@ module.exports = class Product {
   }
 
   save() {
-    getProductsFromFile((products) => {
-      this.id = products.length > 0 ? products[products.length - 1].id + 1 : 1;
-      products.push(this);
-      fs.writeFile(p, JSON.stringify(products), (err) => {
-        if (err) console.log(err);
-      });
-    });
+    db.execute(
+      "INSERT INTO products (title, imageUrl, description, price) VALUES (?, ?, ?, ?)",
+      [this.title, this.imageUrl, this.description, this.price]
+    );
+  }
+
+  static fetchAll() {
+    return db.execute("SELECT * FROM products");
+  }
+  static findById(id) {
+    return db.execute("SELECT * FROM products WHERE id = ?", [id]);
+  }
+
+  static editProduct(id, updatedProduct) {
+    return db.execute(
+      "UPDATE products SET title = ?, imageUrl = ?, description = ?, price = ? WHERE id = ?",
+      [
+        updatedProduct.title,
+        updatedProduct.imageUrl,
+        updatedProduct.description,
+        updatedProduct.price,
+        id,
+      ]
+    );
   }
 
   static deleteById(id) {
-    getProductsFromFile((products) => {
-      const updatedProducts = products.filter((p) => p.id !== id);
-      fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
-        if (err) console.log(err);
-      });
-    });
+    db.execute("DELETE FROM products WHERE id = ?", [id]);
 
     getCartItems((cartItems) => {
       const updatedCartItems = cartItems.filter((item) => item.id !== id);
       fs.writeFile(p2, JSON.stringify(updatedCartItems), (err) => {
         if (err) console.log(err);
+      });
+    });
+  }
+
+  /* ============= Cart ============= */
+  static fetchAllCart(cb) {
+    getCartItems((cartItems) => {
+      getProductsFromFile((products) => {
+        const detailedCartItems = cartItems.map((cartItem) => {
+          const product = products.find((p) => p.id === cartItem.id);
+          return {
+            ...product,
+            quantity: cartItem.quantity,
+          };
+        });
+
+        cb(detailedCartItems);
       });
     });
   }
@@ -105,43 +135,6 @@ module.exports = class Product {
       const cartItemIndex = cartItems.findIndex((item) => item.id === id);
       cartItems[cartItemIndex].quantity = newQuantity;
       fs.writeFile(p2, JSON.stringify(cartItems), (err) => {
-        if (err) console.log(err);
-      });
-    });
-  }
-
-  static fetchAll(cb) {
-    getProductsFromFile(cb);
-  }
-
-  static fetchAllCart(cb) {
-    getCartItems((cartItems) => {
-      getProductsFromFile((products) => {
-        const detailedCartItems = cartItems.map((cartItem) => {
-          const product = products.find((p) => p.id === cartItem.id);
-          return {
-            ...product,
-            quantity: cartItem.quantity,
-          };
-        });
-
-        cb(detailedCartItems);
-      });
-    });
-  }
-
-  static findById(id, cb) {
-    getProductsFromFile((products) => {
-      const product = products.find((p) => p.id === id);
-      cb(product);
-    });
-  }
-
-  static editProduct(id, updatedProduct) {
-    getProductsFromFile((products) => {
-      const productIndex = products.findIndex((p) => p.id === id);
-      products[productIndex] = updatedProduct;
-      fs.writeFile(p, JSON.stringify(products), (err) => {
         if (err) console.log(err);
       });
     });

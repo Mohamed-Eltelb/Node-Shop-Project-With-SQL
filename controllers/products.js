@@ -2,12 +2,12 @@ const Product = require("../models/product");
 
 /* ============= Products ============= */
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll((products) => {
+  Product.fetchAll().then(([rows, fieldData]) => {
     res.render("shop/product-list", {
-      prods: products,
+      prods: rows,
       docTitle: "Shop",
       path: "/products",
-      hasProducts: products.length > 0,
+      hasProducts: rows.length > 0,
       activeShop: true,
       productCSS: true,
     });
@@ -16,7 +16,8 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const prodId = parseInt(req.params.productId, 10);
-  Product.findById(prodId, (product) => {
+  Product.findById(prodId).then(([rows, fieldData]) => {
+    const product = rows[0];
     if (product) {
       res.render("shop/product-detail", {
         product: product,
@@ -44,13 +45,15 @@ exports.postAddProduct = (req, res, next) => {
   const description = req.body.description;
   const price = req.body.price;
   const product = new Product(title, imageUrl, description, price);
-  product.save();
-  res.redirect("/products");
+  product.save().then(() => {
+    res.redirect("/products");
+  });
 };
 
 exports.getEditProduct = (req, res, next) => {
   const prodId = parseInt(req.params.productId, 10);
-  Product.findById(prodId, (product) => {
+  Product.findById(prodId).then(([rows, fieldData]) => {
+    const product = rows[0];
     res.render("admin/edit-product", {
       docTitle: "Edit Product",
       path: "/admin/edit-product",
@@ -82,12 +85,12 @@ exports.postDeleteProduct = (req, res, next) => {
 
 //admin products
 exports.getAdminProducts = (req, res, next) => {
-  Product.fetchAll((products) => {
+  Product.fetchAll().then(([rows, fieldData]) => {
     res.render("admin/products", {
-      prods: products,
+      prods: rows,
       docTitle: "Admin Products",
       path: "/admin/products",
-      hasProducts: products.length > 0,
+      hasProducts: rows.length > 0,
       activeShop: true,
       productCSS: true,
     });
@@ -133,13 +136,10 @@ exports.postRemoveFromCart = (req, res, next) => {
 
 /* ============= General ============= */
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll((products) => {
     res.render("shop/index", {
-      prods: products,
       docTitle: "Shop",
       path: "/",
     });
-  });
 };
 
 exports.getCheckout = (req, res, next) => {
