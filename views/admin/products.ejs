@@ -1,0 +1,45 @@
+<%- include('../includes/start.ejs') %>
+
+<link rel="stylesheet" href="/css/product.css">
+</head>
+
+<body>
+<%- include('../includes/header.ejs') %>
+
+
+    <main>
+        <h1>My Admin Products</h1>
+        <% if (hasProducts) { %>
+            <div class="grid">
+                <% for (let product of prods) { %>
+                    <article class="card product-item">
+                        <header class="card_header">
+                            <h1 class="product_title">
+                                <%= product.title %>
+                            </h1>
+                        </header>
+                        <div class="card_image">
+                            <img src="../<%= product.imageUrl %>"
+                                alt="A Book">
+                        </div>
+                        <div class="card_content">
+                            <h2 class="product_price">$<%= product.price %></h2>
+                            <p class="product_description"><%= product.description %></p>
+                        </div>
+                        <div class="card_actions">
+                            <form action="/admin/edit-product/<%= product.id %>" method="GET">
+                                <button class="btn">Edit</button>
+                            </form>
+                            <form action="/admin/products" method="POST">
+                                <input type="hidden" name="productId" value="<%= product.id %>">
+                                <button class="btn danger">Delete</button>
+                            </form>
+                        </div>
+                    </article>
+                    <% } %>
+            </div>
+            <% } else { %>
+                <p>No products found.</p>
+                <% } %>
+    </main>
+<%- include('../includes/end.ejs') %>

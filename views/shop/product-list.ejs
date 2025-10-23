@@ -1,0 +1,47 @@
+<%- include('../includes/start.ejs') %>
+
+<link rel="stylesheet" href="/css/product.css">
+</head>
+
+<body>
+<%- include('../includes/header.ejs') %>
+
+
+    <main>
+        <h1>My Products</h1>
+        <% if (hasProducts) { %>
+            <div class="grid">
+                <% for (let product of prods) { %>
+                    <article class="card product-item">
+                        <header class="card_header">
+                            <h1 class="product_title">
+                                <%= product.title %>
+                            </h1>
+                        </header>
+                        <div class="card_image">
+                            <img src="<%= product.imageUrl %>"
+                                alt="A Book">
+                        </div>
+                        <div class="card_content">
+                            <h2 class="product_price">$<%= product.price %></h2>
+                            <p class="product_description"><%= product.description %></p>
+                        </div>
+                        <div class="card_actions">
+                            <a href="/products/<%= product.id %>" class="btn" type="button">View Details</a>
+                            <% if (product.inTheCart) { %>
+                                <button class="btn btn-disabled" disabled aria-disabled="true">Already in Cart</button>
+                            <% } else { %>
+                            <form action="/add-to-cart" method="POST">
+                                <input type="hidden" name="productId" value="<%= product.id %>">
+                                <button class="btn" type="submit">Add to Cart</button>
+                            </form>
+                            <% } %>
+                        </div>
+                    </article>
+                    <% } %>
+            </div>
+            <% } else { %>
+                <p>No products found.</p>
+                <% } %>
+    </main>
+<%- include('../includes/end.ejs') %>

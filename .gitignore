@@ -1,0 +1,81 @@
+# Node dependencies
+node_modules/
+
+# Logs and diagnostics
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+report.*.json
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Testing and coverage
+coverage/
+*.lcov
+.nyc_output/
+
+# Build outputs and caches
+dist/
+build/
+out/
+.cache/
+.parcel-cache/
+.turbo/
+.next/
+.nuxt/
+.svelte-kit/
+storybook-static/
+.eslintcache
+.stylelintcache
+
+# TypeScript
+*.tsbuildinfo
+
+# Tooling caches
+.npm/
+.yarn/*
+!.yarn/releases
+!.yarn/patches
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp*
+.vite/
+
+# Serverless / hosting
+.serverless/
+.vercel/
+.netlify/
+
+# Package managers
+bower_components/
+
+# Editors and OS files
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Misc
+.dynamodb/
+.tern-port

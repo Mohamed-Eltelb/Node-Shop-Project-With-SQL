@@ -1,0 +1,64 @@
+.product-form {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.form-control {
+  margin: 0; /* handled by form grid gap */
+}
+
+.form-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+}
+.form-control label,
+.form-control input,
+.form-control textarea {
+  display: block;
+  width: 100%;
+}
+
+.form-control label {
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+}
+
+.form-control input,
+.form-control textarea {
+  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text);
+  font: inherit;
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.75rem;
+}
+
+.form-control textarea {
+  min-height: 6rem;
+  resize: vertical;
+}
+.form-control input::placeholder,
+.form-control textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+.form-control input:focus,
+.form-control textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+/* Button alignment */
+.product-form .btn {
+  width: 100%;
+}
+@media (min-width: 480px) {
+  .product-form .btn {
+    width: auto;
+    justify-self: end;
+  }
+}

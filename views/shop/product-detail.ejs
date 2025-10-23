@@ -1,0 +1,43 @@
+<%- include('../includes/start.ejs') %>
+
+<link rel="stylesheet" href="/css/product.css">
+<link rel="stylesheet" href="/css/product-details.css">
+</head>
+
+<body>
+  <%- include('../includes/header.ejs') %>
+
+
+  <main>
+    <section class="product-detail">
+      <div class="product-detail__container">
+        <div class="product-detail__media">
+          <figure class="product_image">
+            <img src="../<%= product.imageUrl %>" alt="<%= product.title %>" loading="lazy">
+          </figure>
+        </div>
+
+        <div class="product-detail__info">
+          <h1 class="product_title"><%= product.title %></h1>
+
+          <p class="product_price">$<%= product.price %></p>
+
+          <div class="product_description">
+            <p><%= product.description %></p>
+          </div>
+
+          <div class="card_actions">
+            <% if (product.inTheCart) { %>
+              <button class="btn btn-disabled" disabled aria-disabled="true">Already in Cart</button>
+            <% } else { %>
+              <form action="/add-to-cart" method="POST" class="add-to-cart-form">
+                <input type="hidden" name="productId" value="<%= product.id %>">
+                <button class="btn btn-primary" type="submit">Add to Cart</button>
+              </form>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <%- include('../includes/end.ejs') %>

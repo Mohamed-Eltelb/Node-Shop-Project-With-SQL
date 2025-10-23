@@ -1,0 +1,65 @@
+<%- include('../includes/start.ejs') %>
+
+<link rel="stylesheet" href="/css/product.css">
+</head>
+
+<body>
+  <%- include('../includes/header.ejs') %>
+
+
+  <main>
+    <% /* compute cart total in-template */ %>
+    <% let total=0; for (let p of cartItems) { total +=(p.price || 0) * (p.quantity || 1); } %>
+
+    <header class="cart-header">
+      <h1>My Cart</h1>
+      <% if (cartItems.length> 0) { %>
+      <div class="cart-summary">
+        <p class="cart-total">Total: $<%= total.toFixed(2) %>
+        </p>
+        <form action="/checkout" method="POST" class="checkout-form">
+          <button class="btn btn-primary checkout-btn" type="submit">Checkout</button>
+        </form>
+      </div>
+      <% } %>
+    </header>
+
+    <% if (cartItems.length> 0) { %>
+    <div class="grid">
+      <% for (let product of cartItems) { %>
+      <article class="card product-item">
+        <header class="card_header">
+          <h2 class="product_title">
+            <%= product.title %>
+          </h2>
+        </header>
+        <div class="card_image">
+          <img src="<%= product.imageUrl %>" alt="<%= product.title %>">
+        </div>
+        <div class="card_content">
+          <h3 class="product_price">$<%= product.price %>
+          </h3>
+          <p class="product_quantity">Qty: <strong>
+              <%= product.quantity || 1 %>
+            </strong></p>
+        </div>
+        <div class="card_actions" style="justify-content: space-between; padding: 0.75rem 1rem;">
+          <form action="/update-quantity" method="POST" class="update-qty-form">
+            <input type="hidden" name="productId" value="<%= product.id %>">
+            <input aria-label="quantity" type="number" id="quantity_<%= product.id %>" name="quantity" value="<%= product.quantity || 1 %>" min="1" required>
+            <button class="btn btn--outline" id="update-qty_<%= product.id %>" type="submit" disabled>Update</button>
+          </form>
+
+          <form action="/remove-from-cart" method="POST">
+            <input type="hidden" name="productId" value="<%= product.id %>">
+            <button class="btn danger" type="submit">Remove</button>
+          </form>
+        </div>
+      </article>
+      <% } %>
+    </div>
+    <% } else { %>
+    <p>No products found.</p>
+    <% } %>
+  </main>
+  <%- include('../includes/end.ejs') %>
